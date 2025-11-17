@@ -8,6 +8,8 @@
  * @author Adm
  */
 import javax.swing.JOptionPane;
+import java.sql.SQLException;
+
 
 public class cadastroVIEW extends javax.swing.JFrame {
 
@@ -156,10 +158,12 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        try {
         ProdutosDTO produto = new ProdutosDTO();
         String nome = cadastroNome.getText();
         String valor = cadastroValor.getText();
         String status = "A Venda";
+        
         produto.setNome(nome);
         produto.setValor(Integer.parseInt(valor));
         produto.setStatus(status);
@@ -167,6 +171,13 @@ public class cadastroVIEW extends javax.swing.JFrame {
         ProdutosDAO produtodao = new ProdutosDAO();
         produtodao.cadastrarProduto(produto);
         
+        JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+        
+        } catch (NumberFormatException e) { 
+            JOptionPane.showMessageDialog(null, "Valor inválido. Digite um número inteiro.");
+             } catch (SQLException e) {
+                 JOptionPane.showMessageDialog(null, "Erro ao salvar no banco: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
@@ -179,6 +190,7 @@ public class cadastroVIEW extends javax.swing.JFrame {
             ProdutosDTO produto = new ProdutosDTO();
             produto.setNome(cadastroNome.getText());
             produto.setValor(Integer.parseInt(cadastroValor.getText()));
+            produto.setStatus("A Venda");
             
             ProdutosDAO dao = new ProdutosDAO();
             dao.cadastrarProduto(produto);

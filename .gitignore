@@ -1,0 +1,3 @@
+# Ignorar arqu8ivos compliados do NetBeans
+/build/classes/
+nbproject/private/
