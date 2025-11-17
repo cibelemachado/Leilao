@@ -65,6 +65,10 @@ public class ProdutosDAO {
         }                
         
         return lista;
-    }    
+    }
+
+    public void venderProduto(int id) {
+    }
+
 }
 
