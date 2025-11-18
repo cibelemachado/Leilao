@@ -137,17 +137,50 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
+      try {
+          String idTexto = id_produto_venda.getText().trim();
+          
+        if (idTexto.isEmpty()) {
+             JOptionPane.showMessageDialog(null,"Digite o ID do produto a ser vendido.");
+             return;
+        }
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
+        int id = Integer.parseInt(idTexto);
         
-        //produtosdao.venderProduto(Integer.parseInt(id));
+        ProdutosDAO dao = new ProdutosDAO();
+        
+        ProdutosDTO produto = dao.buscarProdutoPorId(id);
+        
+        if (produto == null) {
+            JOptionPane.showMessageDialog(null, "Produto não encontrado!");
+            return;
+        }
+        
+        if ("Vendido".equalsIgnoreCase(produto.getStatus())) {
+            JOptionPane.showMessageDialog(null, 
+                    "Este produto já foi vendido! Escolha outro.");
+            return;            
+        }
+        
+        dao.venderProduto(id);
+        
+        JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+        
         listarProdutos();
+        id_produto_venda.setText("");
+        
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Digite um ID válido (número inteiro).");
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage());        
+        } 
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+        vendasVIEW vendas = new vendasVIEW(); 
+        vendas.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
