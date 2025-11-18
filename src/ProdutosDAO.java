@@ -66,9 +66,62 @@ public class ProdutosDAO {
         
         return lista;
     }
-
-    public void venderProduto(int id) {
+    
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() throws SQLException {
+        ArrayList<ProdutosDTO> lista = new ArrayList<>();
+        String sql = "SELECT id, nome, valor, status FROM produtos WHERE status = 'Vendido' ORDER BY id";
+        
+        try (Connection conn = getConnection();
+                PreparedStatement pst = conn.prepareStatement(sql);
+                ResultSet rs = pst.executeQuery()) {
+            
+                while (rs.next()) {
+                    ProdutosDTO p = new ProdutosDTO();
+                    p.setId(rs.getInt("id"));
+                    p.setNome(rs.getString("nome"));
+                    p.setValor(rs.getInt("valor"));
+                    p.setStatus(rs.getString("status"));
+                    lista.add(p);
+                }
+        }
+        
+         return lista;
+    }
+    
+    public ProdutosDTO buscarProdutoPorId(int id) throws SQLException {
+        String sql = "SELECT id, nome, valor, status FROM produtos WHERE id = ?";
+        ProdutosDTO produto = null;
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                produto = new ProdutosDTO();
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getInt("valor"));
+                produto.setStatus(rs.getString("status"));
+            }
+        }
+        
+        return produto;
     }
 
+    public void venderProduto(int id) throws SQLException {
+        conectaDAO conecta = new conectaDAO();
+        Connection conn = conecta.connectDB();
+        
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+        PreparedStatement pstm = conn.prepareStatement(sql);
+        
+        pstm.setInt(1,id);
+        pstm.executeUpdate();
+               
+        pstm.close();
+        conn.close();
+    }
 }
 
